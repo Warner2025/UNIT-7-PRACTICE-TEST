@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemical Bonding & IMF Practice Test</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        #quiz-container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #question-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        #question-number {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        #navigation {
+            display: flex;
+            gap: 10px;
+        }
+        #navigation button {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #eee;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+         #navigation button:hover:not(:disabled) {
+            background-color: #ddd;
+        }
+        #navigation button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #question-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #eee;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .option:hover:not(.disabled) {
+            background-color: #ddd;
+        }
+        .option.correct {
+            background-color: #a8e6cf; /* Light green */
+            border-color: #6bc9a5;
+        }
+        .option.incorrect {
+            background-color: #ff8a80; /* Light red */
+            border-color: #e57373;
+        }
+        .option.disabled {
+            cursor: default;
+        }
+        #feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 1px solid #ccc;
+            display: none; /* Hidden by default */
+        }
+        #feedback p {
+            margin: 0 0 10px 0;
+        }
+        #feedback strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quiz-container">
+        <div id="question-info">
+            <div id="question-number"></div>
+            <div id="navigation">
+                <button id="prev-btn">&lt; Previous</button>
+                <button id="next-btn">Next &gt;</button>
+            </div>
+        </div>
+        <div id="question-text"></div>
+        <div id="options-container">
+            <!-- Options will be loaded here by JavaScript -->
+        </div>
+        <div id="feedback">
+            <strong>Explanation:</strong>
+            <p id="explanation-text"></p>
+            <p id="page-info"></p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What type of bond typically forms between a metal and a nonmetal?",
+                options: ["Covalent", "Ionic", "Metallic", "Hydrogen"],
+                correctAnswer: 1, // Index of "Ionic"
+                explanation: "Ionic bonds form between metals (which tend to lose electrons) and nonmetals (which tend to gain electrons) due to the transfer of electrons.",
+                page: 1
+            },
+            {
+                question: "Which type of bond involves the sharing of electrons between two nonmetal atoms?",
+                options: ["Ionic", "Metallic", "Covalent", "Dipole-Dipole"],
+                correctAnswer: 2, // Index of "Covalent"
+                explanation: "Covalent bonds involve the sharing of valence electrons between the nuclei of two nonmetal atoms.",
+                page: 1
+            },
+            {
+                question: "What model describes metallic bonding?",
+                options: ["Crystal Lattice Model", "VSEPR Model", "Electron Sea Model", "Bohr Model"],
+                correctAnswer: 2, // Index of "Electron Sea Model"
+                explanation: "The 'Electron Sea Model' describes metallic bonding, where valence electrons are delocalized and mobile among positive metal cations.",
+                page: "1, 3"
+            },
+            {
+                question: "What is the general tendency of atoms according to the Octet Rule?",
+                options: ["To achieve 2 valence electrons", "To lose all valence electrons", "To achieve a full set of 8 valence electrons", "To form metallic bonds"],
+                correctAnswer: 2, // Index of "To achieve a full set of 8 valence electrons"
+                explanation: "The Octet Rule states that atoms tend to gain, lose, or share electrons to acquire a full set of 8 valence electrons, resembling noble gas configurations.",
+                page: 2
+            },
+            {
+                question: "Which elements follow the Duet Rule instead of the Octet Rule?",
+                options: ["Oxygen and Fluorine", "Sodium and Chlorine", "Hydrogen, Lithium, and Beryllium", "Carbon and Nitrogen"],
+                correctAnswer: 2, // Index of "Hydrogen, Lithium, and Beryllium"
+                explanation: "H, Li, and Be are exceptions to the octet rule and follow the Duet Rule, aiming for 2 valence electrons like Helium.",
+                page: 2
+            },
+            {
+                question: "What is a positively charged ion called?",
+                options: ["Anion", "Cation", "Molecule", "Isotope"],
+                correctAnswer: 1, // Index of "Cation"
+                explanation: "A cation is a positively charged ion, typically formed when a metal atom loses electrons.",
+                page: 2
+            },
+            {
+                question: "What property allows metals to be drawn into thin wires?",
+                options: ["Malleability", "Conductivity", "Luster", "Ductility"],
+                correctAnswer: 3, // Index of "Ductility"
+                explanation: "Ductility is the ability of a metal to be stretched into thin wires, possible because the metal ions can slide past each other within the electron sea.",
+                page: 3
+            },
+            {
+                question: "Why do metals generally have high melting points?",
+                options: ["Because they form covalent bonds", "Due to weak intermolecular forces", "Due to the strength of the metallic bonding", "Because they are nonpolar"],
+                correctAnswer: 2, // Index of "Due to the strength of the metallic bonding"
+                explanation: "The strong attraction between the positive metal cations and the delocalized 'sea' of electrons results in strong metallic bonds, requiring significant energy (high temperature) to melt.",
+                page: 3
+            },
+            {
+                question: "Ionic compounds form a structure called a:",
+                options: ["Molecule", "Electron Sea", "Crystal Lattice", "Diatomic Element"],
+                correctAnswer: 2, // Index of "Crystal Lattice"
+                explanation: "Ionic compounds arrange themselves in a regular, repeating 3D pattern called a crystal lattice, balancing attractions and repulsions between ions.",
+                page: 5
+            },
+            {
+                question: "Why are ionic compounds typically brittle?",
+                options: ["They have weak bonds", "An external force causes like charges to align and repel", "Their electrons are mobile", "They have low melting points"],
+                correctAnswer: 1, // Index of "An external force causes like charges to align and repel"
+                explanation: "When an external force shifts the layers in an ionic crystal, ions with the same charge can align, leading to strong repulsion that causes the crystal to crack or cleave.",
+                page: 5
+            },
+            {
+                question: "Under what conditions do ionic compounds conduct electricity?",
+                options: ["Only in solid form", "Only when dissolved in nonpolar solvents", "In liquid (molten) form or when dissolved in water", "Never"],
+                correctAnswer: 2, // Index of "In liquid (molten) form or when dissolved in water"
+                explanation: "Ionic compounds conduct electricity when their ions are free to move, which occurs in the liquid state or when dissolved in water (aqueous solution).",
+                page: 5
+            },
+            {
+                question: "What is the basic unit of a covalent substance called?",
+                options: ["Formula Unit", "Ion", "Molecule", "Crystal"],
+                correctAnswer: 2, // Index of "Molecule"
+                explanation: "A molecule is the neutral unit formed when nonmetal atoms share electrons via covalent bonds.",
+                page: 6
+            },
+            {
+                question: "Why do covalent compounds generally have low melting and boiling points?",
+                options: ["They form strong crystal lattices", "Only weak intermolecular forces (IMFs) need to be overcome during phase changes", "They involve electron transfer", "They always conduct electricity"],
+                correctAnswer: 1, // Index of "Only weak intermolecular forces (IMFs) need to be overcome during phase changes"
+                explanation: "Phase changes in covalent compounds involve breaking the relatively weak forces between molecules (IMFs), not the strong covalent bonds within molecules.",
+                page: 6
+            },
+            {
+                question: "In a Lewis structure, what does a double bond represent?",
+                options: ["Sharing of 2 electrons", "Sharing of 4 electrons", "Sharing of 6 electrons", "Transfer of 2 electrons"],
+                correctAnswer: 1, // Index of "Sharing of 4 electrons"
+                explanation: "A double bond consists of two shared pairs of electrons, totaling 4 electrons shared between two atoms.",
+                page: 7
+            },
+            {
+                question: "According to VSEPR theory, what determines the geometry of a molecule?",
+                options: ["The number of protons", "The repulsion between valence shell electron groups", "The electronegativity difference", "The strength of intermolecular forces"],
+                correctAnswer: 1, // Index of "The repulsion between valence shell electron groups"
+                explanation: "VSEPR (Valence Shell Electron Pair Repulsion) theory states that electron groups (bonds and lone pairs) around a central atom arrange themselves to minimize repulsion, dictating the molecule's shape.",
+                page: 11
+            },
+            {
+                question: "How many electron groups are around the central carbon atom in CO₂?",
+                options: ["1", "2", "3", "4"],
+                correctAnswer: 1, // Index of "2"
+                explanation: "CO₂ has a central carbon double-bonded to two oxygen atoms (O=C=O). Each double bond counts as ONE electron group, so there are 2 electron groups around the carbon.",
+                page: 11
+            },
+            {
+                question: "What is the molecular geometry of a molecule with 4 electron groups and 0 lone pairs around the central atom (e.g., CH₄)?",
+                options: ["Linear", "Trigonal Planar", "Tetrahedral", "Bent"],
+                correctAnswer: 2, // Index of "Tetrahedral"
+                explanation: "Four electron groups with no lone pairs arrange themselves in a tetrahedral geometry to minimize repulsion, with bond angles of approximately 109.5°.",
+                page: "12, 13"
+            },
+            {
+                question: "What is the molecular geometry of a water molecule (H₂O)?",
+                options: ["Linear", "Tetrahedral", "Trigonal Pyramidal", "Bent"],
+                correctAnswer: 3, // Index of "Bent"
+                explanation: "Water has 4 electron groups around the central oxygen (2 bonds, 2 lone pairs). The electron geometry is tetrahedral, but the molecular geometry (shape based on atoms) is bent due to the two lone pairs.",
+                page: "12, 13"
+            },
+            {
+                question: "Electronegativity is the measure of an atom's ability to:",
+                options: ["Lose electrons", "Attract shared electrons in a bond", "Conduct electricity", "Form metallic bonds"],
+                correctAnswer: 1, // Index of "Attract shared electrons in a bond"
+                explanation: "Electronegativity quantifies the tendency of an atom to pull shared electrons towards itself within a chemical bond.",
+                page: "6, 14"
+            },
+            {
+                question: "A bond between two atoms with a very small or zero electronegativity difference (0-0.4) is considered:",
+                options: ["Ionic", "Polar Covalent", "Nonpolar Covalent", "Metallic"],
+                correctAnswer: 2, // Index of "Nonpolar Covalent"
+                explanation: "When electronegativity difference is minimal (0-0.4), electrons are shared almost equally, resulting in a nonpolar covalent bond.",
+                page: 14
+            },
+            {
+                question: "A bond with an intermediate electronegativity difference (0.4-2.0) where electrons are shared unequally is:",
+                options: ["Ionic", "Polar Covalent", "Nonpolar Covalent", "Hydrogen Bond"],
+                correctAnswer: 1, // Index of "Polar Covalent"
+                explanation: "Unequal sharing of electrons due to a moderate electronegativity difference (0.4-2.0) creates partial charges (δ+ and δ-) and results in a polar covalent bond.",
+                page: 14
+            },
+            {
+                question: "What type of bond would form between Potassium (K, EN=0.8) and Fluorine (F, EN=4.0)?",
+                options: ["Ionic", "Polar Covalent", "Nonpolar Covalent", "Metallic"],
+                correctAnswer: 0, // Index of "Ionic"
+                explanation: "The electronegativity difference is 4.0 - 0.8 = 3.2. Since this difference is large (≥ 2.0), the bond is considered ionic (electron transfer).",
+                page: 14
+            },
+            {
+                question: "Why is a CO₂ molecule nonpolar even though C-O bonds are polar?",
+                options: ["Carbon is not electronegative", "Oxygen is not electronegative", "The molecule is bent", "The bond dipoles are equal and opposite, cancelling each other out"],
+                correctAnswer: 3, // Index of "The bond dipoles are equal and opposite, cancelling each other out"
+                explanation: "CO₂ is linear (O=C=O). The two C=O bond dipoles are equal in magnitude but point in opposite directions, so their effects cancel, making the overall molecule nonpolar.",
+                page: 16
+            },
+             {
+                question: "A molecule is likely POLAR if the central atom has:",
+                options: ["Only nonpolar bonds", "No lone pairs and is bonded to identical atoms", "One or more lone pairs", "A linear geometry"],
+                correctAnswer: 2, // Index of "One or more lone pairs"
+                explanation: "Lone pairs on the central atom often lead to an asymmetrical distribution of charge, preventing bond dipoles from canceling out and resulting in a polar molecule.",
+                page: "18, 19"
+            },
+            {
+                question: "What are intermolecular forces (IMFs)?",
+                options: ["Forces holding atoms together within a molecule (bonds)", "Forces of attraction/repulsion between neighboring molecules", "Forces within the nucleus", "Forces related to electron transfer"],
+                correctAnswer: 1, // Index of "Forces of attraction/repulsion between neighboring molecules"
+                explanation: "Intermolecular forces (IMFs) are the weaker forces that exist between separate molecules, influencing properties like boiling point.",
+                page: 20
+            },
+            {
+                question: "Which type of IMF is present between ALL molecules (polar and nonpolar)?",
+                options: ["Hydrogen Bonding", "Ionic Bonding", "Dipole-Dipole Forces", "London Dispersion Forces (LDF)"],
+                correctAnswer: 3, // Index of "London Dispersion Forces (LDF)"
+                explanation: "London Dispersion Forces (LDF) arise from temporary fluctuations in electron distribution and exist between all particles that have electrons.",
+                page: 20
+            },
+            {
+                question: "Which type of IMF occurs between polar molecules?",
+                options: ["Ionic Bonding", "London Dispersion Forces (LDF)", "Dipole-Dipole Forces", "Metallic Bonding"],
+                correctAnswer: 2, // Index of "Dipole-Dipole Forces"
+                explanation: "Dipole-dipole forces are the electrostatic attractions between the positive end (δ+) of one polar molecule and the negative end (δ-) of a neighboring polar molecule.",
+                page: 20
+            },
+            {
+                question: "Hydrogen bonding is a special, strong type of dipole-dipole force that occurs when hydrogen is bonded to which elements?",
+                options: ["Carbon, Silicon, or Germanium", "Sulfur, Chlorine, or Bromine", "Fluorine, Oxygen, or Nitrogen", "Any metal"],
+                correctAnswer: 2, // Index of "Fluorine, Oxygen, or Nitrogen"
+                explanation: "Hydrogen bonds form when H is directly bonded to a small, highly electronegative atom: Fluorine (F), Oxygen (O), or Nitrogen (N).",
+                page: 20
+            },
+            {
+                question: "Which substance would exhibit hydrogen bonding?",
+                options: ["CH₄", "CO₂", "H₂S", "NH₃"],
+                correctAnswer: 3, // Index of "NH₃"
+                explanation: "NH₃ (Ammonia) has N-H bonds. Since N is one of the three required elements (F, O, N) for hydrogen bonding, NH₃ molecules can form hydrogen bonds with each other.",
+                page: "20, 22"
+            },
+            {
+                question: "Generally, how do the strengths of IMFs compare to covalent or ionic bonds?",
+                options: ["IMFs are much stronger", "IMFs are much weaker", "They have comparable strength", "IMF strength depends only on molecule size"],
+                correctAnswer: 1, // Index of "IMFs are much weaker"
+                explanation: "Intermolecular forces (between molecules) are significantly weaker than intramolecular forces like covalent or ionic bonds (within molecules).",
+                page: "20, 21"
+            }
+            // Add more questions here following the same format
+        ];
+
+        let currentQuestionIndex = 0;
+
+        const questionNumberElement = document.getElementById('question-number');
+        const questionTextElement = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackElement = document.getElementById('feedback');
+        const explanationTextElement = document.getElementById('explanation-text');
+        const pageInfoElement = document.getElementById('page-info');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        function loadQuestion(index) {
+            const q = questions[index];
+            questionNumberElement.textContent = `Question ${index + 1} of ${questions.length}`;
+            questionTextElement.textContent = q.question;
+            optionsContainer.innerHTML = ''; // Clear previous options
+            feedbackElement.style.display = 'none'; // Hide feedback
+
+            q.options.forEach((optionText, optionIndex) => {
+                const optionButton = document.createElement('button');
+                optionButton.classList.add('option');
+                optionButton.textContent = optionText;
+                optionButton.dataset.index = optionIndex; // Store the index
+                optionButton.addEventListener('click', handleOptionClick);
+                optionsContainer.appendChild(optionButton);
+            });
+
+            // Update navigation button states
+            prevBtn.disabled = (index === 0);
+            nextBtn.disabled = (index === questions.length - 1);
+        }
+
+        function handleOptionClick(event) {
+            const clickedButton = event.target;
+            const selectedOptionIndex = parseInt(clickedButton.dataset.index);
+            const currentQuestion = questions[currentQuestionIndex];
+            const correctAnswerIndex = currentQuestion.correctAnswer;
+
+            // Disable all options after a click
+            Array.from(optionsContainer.children).forEach(button => {
+                button.classList.add('disabled');
+                button.removeEventListener('click', handleOptionClick); // Prevent further clicks
+            });
+
+            // Highlight correct and incorrect answers
+            Array.from(optionsContainer.children).forEach(button => {
+                const optionIndex = parseInt(button.dataset.index);
+                if (optionIndex === correctAnswerIndex) {
+                    button.classList.add('correct');
+                } else if (optionIndex === selectedOptionIndex) {
+                    button.classList.add('incorrect');
+                }
+            });
+
+            // Display feedback
+            explanationTextElement.textContent = currentQuestion.explanation;
+            pageInfoElement.textContent = `Page: ${currentQuestion.page}`;
+            feedbackElement.style.display = 'block';
+        }
+
+        function showNextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+            }
+        }
+
+        function showPreviousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion(currentQuestionIndex);
+            }
+        }
+
+        // Add event listeners to navigation buttons
+        nextBtn.addEventListener('click', showNextQuestion);
+        prevBtn.addEventListener('click', showPreviousQuestion);
+
+        // Load the first question when the page loads
+        window.onload = () => {
+            if (questions.length > 0) {
+                loadQuestion(currentQuestionIndex);
+            } else {
+                quizContainer.innerHTML = "<p>No questions available.</p>";
+            }
+        };
+
+    </script>
+
+</body>
+</html>
